@@ -1,0 +1,553 @@
+{% extends 'accounts/base.html' %}
+{% load humanize %}
+{% load static %}
+{% block assets %}
+   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+   <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/newstyle.css' %}">
+
+
+
+{% endblock %}
+{% load detect %}
+
+{% block content %}
+
+<div class="wrapper">
+
+
+<div class="sidebar">
+  
+            <ul>
+              <li><a href="/" style="background-color: pink;"><i class="material-icons">home</i>Home</a></li>
+              <li> <a href="{% url 'profile' %}" class="">
+                <i class="material-icons">perm_identity</i>
+               Profile - <strong>{{ request.user }}</strong>
+              </a></li>
+              <li><a class=" js-modal-trigger" data-target="modal-js-example">
+                <i  class="material-icons ">add_a_photo</i>
+                New Post
+              </a></li>
+              <li> <a href="{% url 'working' %}" class="">
+                <i  class="material-icons">photo_filter</i>
+                New Story
+              </a></li>
+              <li><a href=""><i  class="material-icons">group_add</i>Followings</a></li>
+              <li><a href=""><i  class="material-icons">group</i>Followers</a></li>
+              <li><a href="{% url 'profilefavourite' request.user %}"> <i  style="color:red !important" class="material-icons">favorite</i> Saved Post</a></li>
+            </ul>
+       
+            <div class="recent">
+            <h1>Recent Likes</h1>
+            
+            {% if recentlikes %}
+            
+            {% for recentpost in recentlikes  %} 
+               
+               
+
+              <p><a href="{% url 'postdetails' recentpost.post.id  %}"><i  style="color:red !important" class="material-icons">favorite_border</i> {{recentpost.post.caption|truncatechars:20}} by {{recentpost.post.user}}</a></p>
+              
+              {% endfor %}
+            {% else %}
+              <p>You didn't liked any post </p>
+              <img src="{% static 'img/thumbs.webp' %}"  style="width:80%;margin-top:-10px" alt="">
+            {% endif %}
+            
+            </div>
+    
+</div>
+
+<div class="center">
+
+    <div class="new" >
+        <div class="cardbox">
+      
+      
+          <div class="card">
+    
+            <div class="card-content">
+              <div class="media">
+                <div class="media-left">
+                  <figure class="image is-48x48">
+                    {% if post.user.picture %}
+                    <img src="{{ post.user.picture.url }}" alt="Placeholder image" style="width:50px; height:50px;object-fit:cover;border-radius:50%;">
+                    {% else %}
+                    <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                    {% endif %}
+                  </figure>
+                </div>
+      
+                
+                <div class="media-left">
+                  
+                  <div>
+                    {% if post.user.first_name %}
+                    <div class="d-flex justify-content-between align-items-center">
+                      <a href="{% url 'profile' post.user %}"><p class="title is-4 has-text-primary">{{ post.user.first_name }} {{ post.user.last_name }}</p></a>
+                      {% if post.user.is_verified %}
+                      <p class='mt-2 ml-2'><span class='material-icons mt-1 ' style="font-size:16px;color:blue;">verified</span></p>
+                      {% endif %}
+                    </div>
+
+                      {% else %}
+                      <a href="{% url 'profile' post.user %}" style="display: inline-block;">
+                        <p class="title is-4 has-text-primary" >{{ post.user.username }}</p>
+                      </a>
+                      {% endif %}
+                      <p class="subtitle is-6 pb-0 mb-0">@{{ post.user.username }}</p>
+                      <p class="subtitle is-6 text-danger" style="font-size:14px !important;font-style: italic;">{{post.date|naturaltime}}</p>
+                    </div>  
+      
+                </div>
+          
+
+
+              </div>
+    
+              <div class="post" style="margin-top:-10px;margin-bottom:15px">  
+                {{ post.caption|content }}
+               
+               <br>
+            {% if post.share %}
+                   
+        <div class="share-content">
+          <div class="card-content">
+
+          <div class="under-share" style="background-color: black !important;color:white;padding: 10px;border-radius: 20px;">
+            <div class="media">
+              <div class="media-left">
+                <figure class="image is-48x48">
+                  {% if post.share.user.picture %}
+                  <img src="{{ post.share.user.picture.url }}" alt="Placeholder image" style="border-radius: 50%;width: 80px;height: 50px;">
+                  {% else %}
+                  <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image" style="border-radius: 50%;width: 80px;height: 50px;">
+                  {% endif %}
+                </figure>
+              </div>
+        
+        
+              <div class="media-content">
+                <div class="d-flex align-items-center">
+                {% if post.share.user.first_name %}
+                <a href="{% url 'profile' %}"><p class="title is-5 has-text-danger">{{ post.share.user.first_name }} {{post.share.user.last_name }}</p></a>
+              {% else %}
+                <a href="{% url 'profile' post.share.user %}" style="display:inline-block"><p class="title is-4 has-text-primary">{{post.share.user }}</p></a>
+              {% endif %}
+              {% if post.user.is_verified %}
+                      <p class='mt-2 ml-2'><span class='material-icons mt-1 ' style="font-size:16px;color:blue;">verified</span></p>
+                      {% endif %}
+              </div>
+              <p class="subtitle is-6">@{{ post.share.user }}</p>
+              </div>
+              <div class="media-right">
+                <a href="{% url 'postdetails' post.share.id %}">Orginal Post</a>
+                
+              </div>
+            </div>  
+          
+            <p> {{ post.share.caption|content}}</p>
+            <br>
+            {% if post.share.content %}
+            <figure class="image is-5by3">
+               <a href="{% url 'postdetails' post.id %}">
+                <img src="{{ post.share.content.url }}" style="object-fit: contain !important;" alt="Placeholder image">
+              </a>
+               
+            </figure>
+            {% endif %}
+          </div> 
+       
+         </div>
+
+
+      
+       </div>
+                    
+                {% endif %}
+            
+            </div>
+
+          <div class="card-image">
+             {% if post.content %}
+              <figure class="image is-5by3">
+                
+                <a href="{% url 'postdetails' post.id %}">
+                  
+                  <img src="{{ post.content.url }}" style="object-fit: contain !important;" alt="Placeholder image">
+                </a>
+                
+              </figure>
+    
+             {% endif %}
+            </div>
+
+            
+            <div class="media ">
+              
+                <div class="media-right">
+                  <i class="material-icons save {% if favourite == 1 %} has-text-danger {% else %} has-text-primary {% endif %}"
+                    style="cursor: pointer;" data="{{post.id}}">save_alt</i>
+                  <p class="output">{% if favourite == 1 %} remove {% else %} save {% endif %}</p>
+                </div>
+      
+      
+                <div class="media-right">
+      
+                  <i class="material-icons likes has-text-primary {% if liked == 1 %} has-text-danger {% else %} has-text-primary {% endif %} "
+                    style="cursor: pointer;" data="{{post.id}}">favorite_border</i>
+                  <p><span class="count">{{ post.likes }}</span> Likes</p>
+                </div>
+      
+                {% if not post.share %}
+                <div class="media-right">
+                
+                  <a data-bs-toggle="collapse" href="#collapseExample{{post.id}}"> <i class="material-icons  has-text-primary {% if shared %} has-text-danger {% else %} has-text-primary {% endif %} "
+                    style="cursor: pointer;">redo</i></a>
+                     
+                  <p><span class="count">{{sharecount}}</span> Shares</p>
+                </div>
+                {% endif %}    
+
+            </div>
+
+        <div class="collapse" id="collapseExample{{post.id}}" style="margin-top:10px;">
+          <div class="card card-body">
+            <form action="{% url 'share' post.id %}" method="post" class="form-controll p-4 shadow" novalidate>
+              {% csrf_token %}
+              <label for="caption">Caption</label><br>
+              <input type="text" name="caption" placeholder="Type something">
+              <input type="submit" value="share" class="btn btn-primary">
+            </form>
+          </div>
+        </div> 
+
+
+            </div>
+          </div>
+      
+          <form method="post" novalidate class="form-controll p-4 shadow">
+            {% csrf_token %}
+            <p class="form-controll" id="comment">{{form.body}}</p>
+            <input type="submit" class="btn-success mt-2" value="Comment">
+          </form>
+      
+          {% if comments %}
+          {% for comment,reply in commentreply.items %}
+      
+      
+          <article class="media mt-3 border shadow">
+            <figure class="media-left">
+              <p class="image is-64x64">
+                {% if comment.user.picture %}
+                <img src="{{ comment.user.picture.url }}" style="width:50px;border-radius:50%;object-fit:cover ;height: 50px;" alt="Placeholder image">
+                {% else %}
+                <img src="https://bulma.io/images/placeholders/96x96.png" style="width:50px;border-radius:50%;object-fit:cover ;height: 50px;" alt="Placeholder image">
+                {% endif %}
+              </p>
+            </figure>
+      
+            <div class="media-content">
+              <div class="content">
+                <div class="d-flex  align-items-center mb-0 pb-0 mt-3">
+      
+                  <strong class="m-0 p-0"><a href="{% url 'profile' comment.user.username %}">{{ comment.user.first_name }} {{ comment.user.last_name }}</a></strong>
+                   {% if comment.user.is_verified %}
+                      <span class='material-icons ml-2' style="font-size:16px;color:blue; ">verified</span>
+                   {% endif %}
+                </div>
+                 
+                  {{ comment.body|content}}
+                  <br>
+                  <strong><small>{{ comment.time|naturaltime }}</small></strong>
+                </p>
+              </div>
+              
+      
+              <p>
+                <a class="" data-bs-toggle="collapse" href="#collapseExample{{comment.id}}" role="button"
+                  aria-expanded="false" aria-controls="collapseExample">
+               
+      
+                  {% if reply == 1 %}
+                     Replied
+                  {% elif reply > 1 %}
+                  {{reply}} Replies
+                  {% else %}
+                  Reply
+                 {% endif %}
+      
+                </a>
+      
+              </p>
+              <div class="collapse" id="collapseExample{{comment.id}}">
+                <div class="card card-body">
+                  <form action="" method="post" class="form-controll p-4 shadow">
+                    {% csrf_token %}
+                    <p class="form-controll" id="reply" >{{form.body}}</p>
+                    <input type="hidden" name="comment_id" value="{{comment.id}}">
+                    <input type="hidden" name="parent" value="{{comment.parent}}">
+                    <input type="submit" class="btn btn-success mt-2" value="reply">
+                  </form>
+      
+                  <!-- reply start -->
+                <div class="reply">
+                  {% if replies %}
+                  {% for reply in replies %}
+                  {% if comment == reply.parent %}
+                  <article class="media mt-3 border {% if comment.user == reply.user %}  bg-light ml-0 text-success shadow-sm {% else %} ml-4 {% endif %}">
+                  <figure class="media-left">
+                    <p class="image is-64x64">
+                      {% if reply.user.picture %}
+                      <img src="{{ reply.user.picture.url }}" style="width:50px;border-radius:50%;object-fit:cover ;height: 50px;" alt="Placeholder image">
+                      {% else %}
+                      <img src="https://bulma.io/images/placeholders/96x96.png" style="width:50px;border-radius:50%;object-fit:cover ;height: 50px;" alt="Placeholder image">
+                      {% endif %}
+                    </p>
+                  </figure>
+      
+                  <div class="media-content">
+                    <div class="content">
+                      <p>
+      
+                        <strong><a href="{% url 'profile' reply.user.username %}">{{reply.user.first_name}} {{reply.user.last_name}} </a> {% if post.user == reply.user %} Author {% elif comment.user == reply.user %}  Commentor {% endif %}</strong>
+
+                      {% if reply.user.is_verified %}
+                      <small class='material-icons ml-2 mt-2' style="font-size:16px;color:blue; ">verified</small>
+                   {% endif %}
+              
+                        <br>
+                        {{ reply.body|content }}
+                        <br>
+                        <strong><small>{{ reply.time|naturaltime }}</small></strong>
+                      </p>
+                    </div>
+                  </article>
+      
+                    {% endif %}
+                     {% endfor %}
+                    {% endif %}
+                </div>
+                    <!--  replay end -->
+      
+                  </div>
+                </div>
+          </article>
+        
+          {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+ 
+
+</div>
+
+
+
+
+
+
+
+<div class="right">
+    <div class="shadow-lg p-2 m-1 has-text-primary">
+       <h1>The People Liked Post</h1>
+   </div>
+   
+    
+   
+  {% if likesuser %}
+       
+  <div class="liked  overflow-auto shadow-sm" style="height:150px;">
+
+          {% for suggest,follow in likesuser %}
+
+                 
+     <div class="suggestion">
+
+       <div class="sug-left">
+      <a href="{% url 'profile' suggest %}"><img src=" 
+      {% if suggest.picture %}
+        
+         {{suggest.picture.url}} {% else %}  https://bulma.io/images/placeholders/96x96.png   {% endif %}" alt="" style="width:50px; height:50px;object-fit:cover;border-radius:50%;"></a> 
+         <a href="{% url 'profile' suggest %}" style="font-size:16px;">
+         {{suggest.first_name}} {{suggest.last_name}}
+         {% if suggest.is_verified %}
+                      <small class='material-icons ml-2' style="font-size:16px;color:blue;margin-top:15px;">verified</small>
+         {% endif %}
+           
+         </a>
+   
+      </div> 
+ 
+  
+     
+  
+    {% if not request.user == suggest and follow == False %} 
+      <div class="follow">
+        
+        <a href="{% url 'following' suggest %}"> <i class="material-icons">person_add</i><span>Follow</span></a>
+   </div>
+   {% elif not request.user == suggest and follow == True %}
+   <div class="follow">     
+    <a class="text-success">Followed</span></a>
+</div>
+   {% endif %}
+
+  </div>
+
+   {% endfor %}
+      
+</div>
+   {% else %}
+ <h1 class="m-3 p-2">No one Liked the Post</h1>
+
+   {% endif %}
+
+
+  <div class="more-post my-1 py-2">
+    <h1 class=" shadow-lg text-success   p-2 text-center">More Post from {{post.user}}</h1>
+    <div class="p-2">
+      
+      {% if from_user %}
+        
+         {% for fpost in from_user %}
+          {% if not fpost.id == post.id %}
+          
+       <img src="{{fpost.user.picture.url}}" alt="" style="width:30px;height:30px;border-radius:50%;margin:5px;"> <a href="{% url 'postdetails' fpost.id %}" class="p-1 m-1">{{fpost.caption|truncatewords:5}} </a>
+          <br>
+            {% endif %}
+         {% endfor %}
+             
+        {% else %}
+        <h1 class="m-2 p-2">No Avaible Post From {{post.user}}</h1>
+      {% endif %}
+
+    </div>
+  </div>
+
+<div class="other-post my-1 py-2">
+  <h1 class="shadow-lg  text-danger  p-2 text-center rounded">Following Posts</h1>
+      <div class="p-2">
+      
+      {% if stream %}
+        
+         {% for fpost in stream %}
+          {% if not fpost.post.id == post.id %}
+          
+         <img src="{{fpost.post.user.picture.url}}" alt="" style="width:30px;height:30px;border-radius:50%;margin:5px;"><a href="{% url 'postdetails' fpost.post.id %}" class="p-1 my-3">{{fpost.post.caption|truncatewords:5}} </a>
+          <br>
+            {% endif %}
+         {% endfor %}
+             
+        {% else %}
+        <h1 class="m-2 p-2">No Post Available</h1>
+      {% endif %}
+
+    </div>
+</div>
+
+</div>
+
+</div>
+
+
+
+<script>
+  
+let likes =document.querySelectorAll('.likes');
+let count=document.querySelectorAll('.count');
+for(let i=0;i<likes.length;i++){
+
+likes[i].addEventListener('click',function(){
+
+       let id=likes[i].getAttribute('data')
+       let url='/likes/'+id
+
+          $.ajax({
+          url:url,
+          method:'GET',
+          data:{},
+          contentType:'application/json; charset=utf-8',
+          dataType: 'json',
+
+          success:function(res){
+                
+                data=res.active
+           
+                if(data!=null){
+               
+                count[i].innerHTML=res.likes    
+                likes[i].classList.add(data) 
+
+
+                }else{
+                 
+                count[i].innerHTML=res.likes    
+                likes[i].classList.remove('has-text-danger')
+
+                }
+               
+
+             
+            
+    
+
+              
+
+          }
+    
+           })
+
+
+})
+
+};
+
+
+
+let save=document.querySelectorAll('.save')
+let output=document.querySelectorAll('.output')
+
+
+for(let j=0;j<save.length;j++){
+
+save[j].addEventListener('click',function(){
+  
+  let id=save[j].getAttribute('data')
+  let url='/favourite/'+id
+
+     $.ajax({
+     url:url,
+     method:'GET',
+     data:{},
+     contentType:'application/json; charset=utf-8',
+     dataType: 'json',
+
+     success:function(res){
+           
+          if(res.save==true){
+            output[j].innerHTML='remove';
+            save[j].classList.remove('has-text-primary');
+            save[j].classList.add('has-text-danger')
+           
+          } 
+          else{
+
+            output[j].innerHTML='save';
+            save[j].classList.remove('has-text-danger');
+            save[j].classList.add('has-text-primary')
+          }
+          console.log(res.save)
+     }
+
+      })
+
+
+});
+
+};
+</script>
+
+{% endblock %}
+
+

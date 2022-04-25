@@ -1,0 +1,79 @@
+{% extends 'accounts/base.html' %}
+{% load humanize %}
+{% load static %}
+{% block assets %}
+<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/settings.css' %}">
+ 
+
+
+
+{% endblock %}
+{% load detect %}
+
+{% block content %}
+
+	<section class="py-5 my-5">
+		<div class="container">
+			<h1 class="mb-5">Account Settings</h1>
+			<div class="bg-white shadow rounded-lg d-block d-sm-flex">
+				<div class="profile-tab-nav border-right">
+					<div class="p-4">
+						<div class="img-circle text-center mb-3">
+							{% if request.user.picture %}
+							<img src="{{request.user.picture.url}}" alt="Image" class="shadow">
+							{% else %}
+							<img src="" alt="Image" class="shadow">
+							{% endif %}
+						</div>
+						<h4 class="text-center">{{request.user.first_name}} {{request.user.last_name}}</h4>
+					</div>
+					<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+						<a class="nav-link " href="{% url 'settings' %}">
+							<i class="fa fa-home text-center mr-1"></i> 
+							General 
+						</a>
+						<a class="nav-link" href="{% url 'settings' %}?profile=change ">
+							<i class="fa fa-user text-center mr-1"></i> 
+							Profile Change
+						</a>
+						<a class="nav-link" href="{% url 'settings' %}?password=change ">
+							<i class="fa fa-key text-center mr-1"></i> 
+							Password
+						</a>
+						<a class="nav-link {{active}}" href="{% url 'settings' %}?help=view ">
+							<i class="fa fa-tv text-center mr-1"></i> 
+							Help
+						</a>
+						<a class="nav-link" href="?report=true">
+							<i class="fa fa-bell text-center mr-1"></i> 
+							Report a Problem
+						</a>
+					</div>
+				</div>
+				<div class="tab-content p-4 p-md-5" id="v-pills-tabContent">
+					<div class="help text-center">
+					<img src="{% static 'img/help.png' %}" alt="" class="img-fluid">
+
+                      <br>
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ea aliquid ducimus nulla, incidunt eveniet quia ad praesentium suscipit assumenda ipsam error ipsa excepturi autem fugit, magnam quam! Ullam unde quam ex vel, provident magnam similique nesciunt beatae consequuntur! Aut, voluptatem natus. Enim ut, ducimus perspiciatis veniam quo porro temporibus nobis sed, alias qui non eveniet reprehenderit hic, distinctio assumenda eos facilis reiciendis? Ea eius exercitationem in quos aspernatur consequuntur ratione magni eum hic blanditiis saepe possimus quasi labore, vero culpa nam accusantium architecto? Odit eveniet obcaecati earum quam. Sunt numquam in aliquid, 
+						</div>
+
+				</div>
+			
+			</div>
+		</div>
+	</section>
+
+{% block js %}
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+
+
+
+{% endblock %}
+
+{% endblock %}

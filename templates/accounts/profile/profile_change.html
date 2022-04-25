@@ -1,0 +1,166 @@
+{% extends 'accounts/base.html' %}
+{% load humanize %}
+{% load static %}
+{% block assets %}
+<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/settings.css' %}">
+ 
+
+
+
+{% endblock %}
+{% load detect %}
+
+{% block content %}
+
+	<section class="py-5 my-5">
+		<div class="container">
+			<h1 class="mb-5">Account Settings</h1>
+			<div class="bg-white shadow rounded-lg d-block d-sm-flex">
+				<div class="profile-tab-nav border-right">
+					<div class="p-4">
+						<div class="img-circle text-center mb-3">
+							{% if request.user.picture %}
+							<img src="{{request.user.picture.url}}" alt="Image" class="shadow">
+							{% else %}
+							<img src="" alt="Image" class="shadow">
+							{% endif %}
+						</div>
+						<h4 class="text-center">{{request.user.first_name}} {{request.user.last_name}}</h4>
+					</div>
+					<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+						<a class="nav-link " href="{% url 'settings' %}">
+							<i class="fa fa-home text-center mr-1"></i> 
+							General 
+						</a>
+						<a class="nav-link {{active}}" href="{% url 'settings' %}?profile=change ">
+							<i class="fa fa-user text-center mr-1"></i> 
+							Profile Change
+						</a>
+						<a class="nav-link" href="{% url 'settings' %}?password=change ">
+							<i class="fa fa-key text-center mr-1"></i> 
+							Password
+						</a>
+						<a class="nav-link" href="{% url 'settings' %}?help=view ">
+							<i class="fa fa-tv text-center mr-1"></i> 
+							Help
+						</a>
+						<a class="nav-link" href="?report=true">
+							<i class="fa fa-bell text-center mr-1"></i> 
+							Report a Problem
+						</a>
+					</div>
+				</div>
+				<div class="tab-content p-4 p-md-5" id="v-pills-tabContent">
+					
+                   {% if messages %}
+					<ul class="messages">
+					{% for message in messages %}
+					<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+					{% endfor %}
+					</ul>
+				{% endif %}
+
+                                 <h1 style="color:black;font-size:20px;margin-bottom:20px">Profile Picture Change</h1>
+                           
+                        <form action="" method="post" enctype="multipart/form-data">
+                        	{% csrf_token %}
+                    
+                           <input type="file" name="profile" id=""> <br>
+                           <button type="submit" class="btn btn-primary mt-3">Change Picture</button>
+                         </form>
+                         <hr>
+
+
+
+                  <h1 style="color:black;font-size:20px">Profile Information Change</h1>
+                      
+                 <form action="" method="post">
+                 	{% csrf_token %}
+                 	<div class="row">
+                         <div class="col-md-12">
+                                <div class="form-group">
+                                      <label>Bio</label>
+                                      {% if profile.bio %}
+                                    <input class="form-control"  type="text" value="{{profile.bio}}" name="bio"></input>
+                                    {% else %}
+                                    <textarea class="form-control" rows="4" placeholder="Add your Bio" name="bio"></textarea>
+                                    {% endif %}
+                                </div>
+                            </div>
+                       
+                         <div class="col-md-6">
+                         	
+                              <label for="">Favourite quotes : </label>
+                              <input type="text" value="{{profile.quotes}}" class="form-control" name="quotes">
+
+                         </div>
+                         <div class="col-md-6">
+                         	
+                              <label for="">Address : </label>
+                              <input type="text" class="form-control" value="{{profile.address}}" name="address">
+
+                         </div>
+
+                       <div class="col-md-12">
+            <h1 style="color:black;font-size:20px" class="ml-4 mt-2">Account Connected</h1><br></div>
+
+                         <div class="col-md-6">
+                         	
+                              <label for="">website link : </label>
+                              <input type="text" class="form-control" value="{{profile.website}}" name="website">
+
+                         </div>
+                         <br>
+
+                         <div class="col-md-6">
+                         	
+                              <label for="">twitter link : </label>
+                              <input type="text" class="form-control" value="{{profile.twitter}}" name="twitter">
+
+                         </div>
+                         <br>
+
+                         <div class="col-md-6">
+                         	
+                              <label for="">instragram link : </label>
+                              <input type="text" class="form-control" value="{{profile.instragram}}" name="instragram">
+
+                         </div>
+                         <br>
+
+                         <div class="col-md-6">
+                         	
+                              <label for="">facebook link : </label>
+                              <input type="text" class="form-control" value="{{profile.facebook}}" name="facebook">
+
+                         </div>
+                         <br>
+
+                         <div class="col-md-6">
+                         	
+                              <label for="">github link : </label>
+                              <input type="text" class="form-control" value="{{profile.github}}" name="github">
+
+                         </div>
+                         <br>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+				</div>
+			
+			</div>
+		</div>
+	</section>
+
+{% block js %}
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+
+
+{% endblock %}
+
+{% endblock %}

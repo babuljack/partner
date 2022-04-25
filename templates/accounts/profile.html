@@ -1,0 +1,424 @@
+{% extends 'accounts/base.html' %}
+{% load humanize %}
+{% load static %}
+{% block assets %}
+   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+   <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+ 
+
+
+
+{% endblock %}
+{% load detect %}
+
+{% block content %}
+
+<div class="row py-5 px-4 position-relative">
+    <div class="col-md-9 overflow-auto profile-section">
+        <!-- Profile widget -->
+        <div class="bg-white shadow rounded overflow-hidden">
+            <div class="px-4 pt-0 pb-4 cover">
+                <div class="media align-items-end profile-head">
+                    <div class="profile mr-3">
+                       
+                      {% if profile.user.picture %}
+                      <img  class="rounded mb-2 img-thumbnail" style="object-fit: cover; height:150px;width:150px; " src="{{ profile.user.picture.url }}">
+                    {% else %}
+                      <img width="130" class="rounded mb-2 img-thumbnail" src="https://bulma.io/images/placeholders/256x256.png">
+                    {% endif %}
+                      
+                      {% if user.is_authenticated and user == profile.user %}
+                          <a href="{% url 'settings' %}" class="btn btn-dark btn-sm btn-block text-white">Edit profile</a>       
+                           {% else %}
+                       
+                           {% if follow_status == True %}
+                              <a href="{% url 'following' profile.user %}" class="btn btn-danger btn-sm btn-block text-white">Unfollow</a>
+                            {% else %}
+                              <a href="{% url 'following' profile.user %}" class="btn btn-success btn-sm btn-block text-white">Follow</a>
+                            {% endif  %}
+
+                      {% endif %}
+
+                      {% if not request.user == profile.user %}
+                        <a href="{% url 'message' %}?user={{profile.user}}" class="btn btn-outline-success mb-3">Message</a>
+                      {% endif %}
+                    </div>
+                    <div class="media-body mb-5 text-white">
+                        <h4 class="mt-0 mb-0 p-2 " style="color:white;font-size:20px;background-color:#fe1111;">{% if profile.user.first_name %}
+                        {{ profile.user.first_name }} {{ profile.user.last_name }} 
+                      {% endif %}
+                    </h4>
+                          <h4 class="text-muted">@{{ profile.user }}</h4>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="bg-light p-4 d-flex justify-content-end text-center mt-2">
+                <ul class="list-inline mb-0 mt-2">
+                    
+
+                  <li class="list-inline-item">
+                    <h5 class="font-weight-bold mb-0 d-block">{{ posts_count }}</h5><small class="text-muted"> <i class="fas fa-user mr-1"></i>Postss</small>
+                </li>
+
+                    <li class="list-inline-item">
+                        <h5 class="font-weight-bold mb-0 d-block">{{ follower_counts }}</h5><small class="text-muted"> <i class="fas fa-user mr-1"></i>Followers</small>
+                    </li>
+                    <li class="list-inline-item">
+                        <h5 class="font-weight-bold mb-0 d-block">{{ following_counts }}</h5><small class="text-muted"> <i class="fas fa-user mr-1"></i>Following</small>
+                    </li>
+                </ul>
+            </div>
+            <div class="px-4 py-3">
+        
+                <h5 class="mb-0">Bio <a href="" class="ml-2 p-1 btn btn-outline-primary">About</a></h5>
+                <div class="p-4 rounded shadow-sm bg-light">
+                  {% if not profile.bio %}
+                     <p class="font-italic mb-0">"I'm On my Way"</p>
+
+                    {% else %}
+                    <p class="font-italic mb-0">"{{profile.bio}}"</p>
+                  {% endif %}
+                    
+                </div>
+            </div>
+           
+                
+            <section class="section">
+                <div class="container">
+            
+              {% if user.is_authenticated and user == profile.user %}
+              <div class="tabs ">
+              <ul>
+                <li class="{% if url_name == 'profile' %}is-active{% endif %}">
+                  <a href="{% url 'profile' profile.user %}"><i class="material-icons">dashboard</i>Posts</a>
+                </li>
+            
+                <li class="{% if url_name == 'profilefavourite' %}is-active{% endif %}">
+                  <a href="{% url 'profilefavourite' profile.user %}"><i class="material-icons">save_alt</i>Saved</a>
+                </li>
+
+              </ul>
+            </div>
+            
+            {% else %}
+            <div class="tabs ">
+              <ul>
+                <li class="is-active">
+                  <a ><i class="material-icons">dashboard</i>{{profile.user}}'s All Post</a>
+                </li> 
+            </ul>
+            </div>
+            {% endif %}
+            
+
+
+            
+      <div class="row">
+        {% if posts %}
+            <!-- Post start -->
+              {% for post in posts %}      
+               <div class="col-md-10 my-4 shadow-sm">
+                  
+                   {% if post.share %}
+
+                     <div class="share-box  bg-white ">
+      
+          <!--Top Post -->
+        <div class="post-top d-flex justify-content-between">
+
+           <div class="media">         
+            <div class="media-left m-3 mb-0">
+              <figure class="image is-48x48">
+                {% if post.user.picture %}
+                <img src="{{ post.user.picture.url }}" alt="Placeholder image" style="border-radius: 50%;width: 80px;height: 50px;">
+                {% else %}
+                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image" style="border-radius: 50%;width: 80px;height: 50px;">
+                {% endif %}
+              </figure>
+            </div>
+      
+      
+            <div class="media-left mt-3">
+              {% if post.user.first_name %}
+              <div class="d-flex justify-content-between align-items-center">
+              <a href="{% url 'profile' post.user %}"><p class="title is-4 has-text-primary">{{ post.user.first_name }} {{ post.user.last_name }}</p></a>
+              {% if post_item.following.is_verified %}
+              <p class='mt-2 ml-2'><span class='material-icons mt-1 ' style="font-size:16px;color:blue;">verified</span></p>
+              {% endif %}
+              </div>
+              
+            {% else %}
+              <a href="{% url 'profile' post.user %}" style="display:inline-block"><p class="title is-4 has-text-primary">{{ post.user }}</p></a>
+            {% endif %}
+            
+            <p class="subtitle is-6 pb-0 mb-0">@{{ post.user }}</p>
+            <p class="subtitle is-6 text-danger" style="font-size:14px !important;font-style: italic;">{{ post.date|naturaltime}}</p>
+          </div>     
+            </div>
+
+                <div class="options d-none m-1 p-1">
+                  <button onclick="alert('We are working on this!')" class="btn btn-light border btn-lg px-3 rounded-circle"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal feather-lg"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+                </div>
+      </div>
+           
+           <!--Top Post end-->
+
+        <!--Top body -->
+    <div class="post-body">
+
+         <div class="mt-0 mb-0 ml-1 px-1 mt-1"  style="margin-bottom:-20px !important" >
+        
+          <a href="{% url 'postdetails' post.id %}" style="color:black">{{ post.caption|content|safe|truncatewords:20}}</a>
+
+            {% if not post.caption == post.caption|truncatewords:20 %}
+                    <a href="{% url 'postdetails' post_item.post.id %}">See More</a>
+             {% endif %}
+      
+         
+        </div>  
+        
+        <div class="share-content">
+           <div class="card-content">
+
+          <div class="under-share" style="background-color:  black !important;color:white;padding: 10px;border-radius: 20px;">
+            <div class="media">
+              <div class="media-left">
+                <figure class="image is-48x48">
+                  {% if post.share.user.picture %}
+                  <img src="{{ post.share.user.picture.url }}" alt="Placeholder image" style="border-radius: 50%;width: 80px;height: 50px;">
+                  {% else %}
+                  <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image" style="border-radius: 50%;width: 80px;height: 50px;">
+                  {% endif %}
+                </figure>
+              </div>
+        
+        
+              <div class="media-content">
+             {% if post.share.user.first_name %}
+                <div class="d-flex align-items-center">
+                  <a href="{% url 'profile' post.share.user %}"><p class="title is-4 has-text-primary">{{ post.share.user.first_name }} {{ post.share.user.last_name }}</p></a>
+                  {% if post.share.user.is_verified %}
+                  <p class='mt-2 ml-2'><span class='material-icons mt-1 ' style="font-size:16px;color:blue;">verified</span></p>
+                  {% endif %}
+                </div>
+                 
+              {% else %}
+                <a href="{% url 'profile' post.share.user %}" style="display:inline-block"><p class="title is-4 has-text-primary">{{ post.share.user }}</p></a>
+              {% endif %}
+              
+              <p class="subtitle is-6">@{{ post_item.post.share.user }}</p>
+              </div>
+     
+            </div>  
+          
+            <p> {{ post.share.caption|content|safe|truncatewords:20}}</p>
+              {% if not post.share.caption == post.share.caption|truncatewords:"20" %}
+                    <a href="{% url 'postdetails' post.share.id %}">See More</a>
+             {% endif %}
+            <br>
+            {% if post.share.content %}
+            <figure class="image is-5by3">
+               <a href="{% url 'postdetails' post.id %}">
+                <img src="{{ post.share.content.url }}" style="object-fit: contain !important;" alt="Placeholder image">
+              </a>
+               
+            </figure>
+            {% endif %}
+          </div> 
+       
+         </div>
+
+
+      
+       </div>
+   </div>
+
+   
+
+
+</div>
+
+
+
+                  {% else %}
+                  
+                         <div class="bg-white ">
+          <!--Top Post -->
+        <div class="post-top d-flex justify-content-between">
+           <div class="media">         
+            <div class="media-left m-3 mb-0">
+              <figure class="image is-48x48">
+                {% if post.user.picture %}
+                <img src="{{ post.user.picture.url }}" alt="Placeholder image" style="border-radius: 50%;width: 80px;height: 50px;">
+                {% else %}
+                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image" style="border-radius: 50%;width: 80px;height: 50px;">
+                {% endif %}
+              </figure>
+            </div>
+      
+      
+            <div class="media-left mt-3">
+              {% if post.user.first_name %}
+              <div class="d-flex justify-content-between align-items-center">
+              <a href="{% url 'profile' %}"><p class="title is-4 has-text-primary">{{ post.user.first_name }} {{ post.user.last_name }}</p></a>
+              {% if post.user.is_verified %}
+              <p class='mt-2 ml-2'><span class='material-icons mt-1 ' style="font-size:16px;color:blue;">verified</span></p>
+              {% endif %}
+              </div>
+              
+              
+            {% else %}
+              <a href="{% url 'profile' post.user %}" style="display:inline-block"><p class="title is-4 has-text-primary">{{ post.user }}</p></a>
+            {% endif %}
+            
+            <p class="subtitle is-6 pb-0 mb-0">@{{ post.user }}</p>
+            <p class="subtitle is-6 text-danger" style="font-size:14px !important;font-style: italic;">{{ post.date|naturaltime}}</p>
+          </div>     
+            </div>
+                
+                <div class="options d-none m-1 p-1">
+                  <button onclick="alert('We are working on this!')" class="btn btn-light border btn-lg px-3 rounded-circle"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal feather-lg"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+                </div>
+        </div>
+           
+           <!--Top Post end-->
+
+        <!--Top body -->
+    <div class="post-body mt-1">
+
+
+         <div class=" mb-0 ml-1 px-1 mt-3"  style="margin-bottom:-20px !important" >
+        
+
+         <a href="{% url 'postdetails' post.id %}" style="color:black;">{{ post.caption|content|safe|truncatewords:20}}</a> 
+
+             {% if not post.caption == post.caption|truncatewords:"20" %}
+                    <a href="{% url 'postdetails' post.id %}">See More</a>
+             {% endif %}
+          
+           
+        </div>  
+         <div class="card-content">
+          {% if post.content %}
+            <div class="card-image">
+          <figure class="image is-5by3">  
+            <a href="{% url 'postdetails' post.id %}" >
+              <img src="{{ post.content.url }}" style="object-fit: contain !important;" alt="Placeholder image">
+            </a>    
+          </figure>
+           </div>
+          {% endif %}
+        
+      </div>
+   </div>
+
+    
+
+                </div>
+
+
+                  {% endif %}
+                      
+
+
+               </div>
+               {% endfor %}
+            <!--Post end-->     
+           
+         {% else %}
+               {% if user.is_authenticated and user == profile.user %}
+                <h3 class="title is-3">You do not have any post!</h3>
+                {% else %}
+                <h3 class="title is-3">No Available Post</h3>
+                {% endif %}      
+        {% endif %}
+      </div>
+
+
+
+
+
+              </section>
+            </div>
+            </div>
+            
+            
+           <div class="col-md-3 position-fixed top-2 end-0 side overflow-auto">
+            <div class="sidebar">
+  
+              <ul>            
+                <li> <a href="{% url 'profile' profile.user %}" class="" style="background:pink">
+                  <i class="material-icons">perm_identity</i>
+                 Profile - <strong>{{ profile.user}}</strong>
+                </a></li>
+                <li> <a href="{% url 'working' %}" class="">
+                  <i  class="material-icons">photo_filter</i>
+                  View story
+                </a></li>
+                
+               
+              </ul>
+         
+
+              <h1>Favourite Quotes</h1>
+
+              <div class="quotes col-md-12 p-2 m-2">
+            
+               <section id="block_content">
+                <div class="col-md-12 ">
+                  {% if not profile.quotes %}
+                  <blockquote class="blockstyle">" Something is better than Nothing "</blockquote>
+                    {% else %}
+                    <blockquote class="blockstyle">" {{profile.quotes}} "</blockquote>
+                  {% endif %}
+                    
+                </div>
+            </section>
+          </div>
+              <div class="recent">
+              <h1>Connected {{profile.user}}</h1>
+              
+              <div class="card mt-3">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe mr-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Website</h6>
+                    <span class="text-secondary">{{profile.website}}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github mr-2 icon-inline"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>Github</h6>
+                    <span class="text-secondary">{{profile.github}}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-twitter mr-2 icon-inline text-info"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>Twitter</h6>
+                    <span class="text-secondary">@{{profile.twitter}}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram mr-2 icon-inline text-danger"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>Instagram</h6>
+                    <span class="text-secondary">{{profile.instragram}}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook mr-2 icon-inline text-primary"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>Facebook</h6>
+                    <span class="text-secondary">{{profile.facebook}}</span>
+                  </li>
+
+                  
+
+                </ul>
+              </div>
+              
+              </div>
+
+
+
+      
+       </div>
+           </div> 
+             
+
+        </div>
+ 
+
+{% endblock %}

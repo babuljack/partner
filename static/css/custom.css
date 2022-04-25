@@ -1,0 +1,75 @@
+
+
+
+#particles-js{
+    height: 100vh;
+    width: 100%;
+    background-color: black;
+}
+
+
+/* html{
+    background-color: #dbdbdb;
+} */
+
+.settings{
+    margin-left:-55px !important;
+}
+
+.menu-bar{
+    border-bottom: 1px solid gray;
+}
+
+/* 
+=============================
+Navbar
+============================== 
+*/
+
+
+/* 
+=================================================
+Responsive
+=================================================
+ */
+
+
+
+
+@media only screen and (max-width: 700px){
+       
+  
+
+    .cardbox{
+       
+        width: 450px !important;
+    }
+  
+} 
+
+
+
+@media only screen and (min-width: 700px){
+       
+  
+
+    .cardbox{
+       
+        width: 500px !important;
+        
+    }
+  
+} 
+
+
+
+@media only screen and (max-width: 1060px){
+       
+    .settings{
+      
+      margin:0px !important;
+    }
+  
+  }  
+
+  

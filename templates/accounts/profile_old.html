@@ -1,0 +1,150 @@
+{% extends 'accounts/base.html' %}
+
+{% load static %}
+
+
+{% block content %}
+
+
+<article class="media">
+
+  <div class="media-left">
+      <figure class="image is-256x256">
+        {% if profile.picture %}
+          <img class="is-rounded" style="width: 200px;object-fit: cover; " src="{{ profile.picture.url }}">
+        {% else %}
+          <img class="is-rounded" src="https://bulma.io/images/placeholders/256x256.png">
+        {% endif %}
+      </figure>
+  </div>
+
+   <div class="media-content">
+
+    <div class="content">
+      <h1 style="font-weight: bold;" class="title is-1">{% if profile.first_name %}{{ profile.first_name }} {{ profile.last_name }} {% endif %}</h1>
+      <h2 class="subtitle is-3">@{{ profile.user }}</h2>
+
+      {% if user.is_authenticated and user != profile.user %}
+      <div class="media-right">
+        {% if follow_status == True %}
+          <a href="{% url 'following' profile.user %}" class="button is-danger">Unfollow</a>
+        {% else %}
+          <a href="{% url 'following' profile.user %}" class="button is-success">Follow</a>
+        {% endif  %}
+      </div>
+    {% endif %}
+
+    </div>
+
+
+     <nav class="level is-mobile">
+  <div class="level-item has-text-centered">
+    <div>
+      <p class="heading">Posts</p>
+      <p class="title">{{ posts_count }}</p>
+    </div>
+  </div>
+  <div class="level-item has-text-centered">
+    <div>
+      <p class="heading">Following</p>
+      <p class="title">{{ following_counts }}</p>
+    </div>
+  </div>
+  <div class="level-item has-text-centered">
+    <div>
+      <p class="heading">Followers</p>
+      <p class="title">{{ follower_counts }}</p>
+    </div>
+  </div>
+</nav>
+
+<p class="subtitle is-5">{% if profile.bio %}{{ profile.bio }}{% endif %}</p>
+
+{% if user.is_authenticated and user == profile.user %}
+  <a href="{% url 'profile' %}" class="button">Edit profile</a>
+{% endif %}
+
+ </div>
+
+</article>
+
+
+</div>
+</div>
+
+
+
+    </div>
+  </section>
+
+
+
+  <section class="section">
+    <div class="container">
+
+  {% if user.is_authenticated and user == profile.user %}
+  <div class="tabs is-centered">
+  <ul>
+    <li class="{% if url_name == 'profile' %}is-active{% endif %}">
+      <a href="{% url 'profile' profile.user %}"><i class="material-icons">dashboard</i>Posts</a>
+    </li>
+
+    <li class="{% if url_name == 'profilefavourite' %}is-active{% endif %}">
+      <a href="{% url 'profilefavourite' profile.user %}"><i class="material-icons">save_alt</i>Saved</a>
+    </li>
+  </ul>
+</div>
+
+{% else %}
+<div class="tabs is-centered">
+  <ul>
+    <li class="is-active">
+      <a ><i class="material-icons">dashboard</i>{{profile.user}}'s All Post</a>
+    </li> 
+</ul>
+</div>
+{% endif %}
+
+
+ <div class="columns ">
+      
+    {% for post in posts %}
+      <div class="column is-one-quarter">
+        <div class="box">
+
+   <figure class="image is-4by3">
+     {% if post.content %}
+      <a href="{% url 'postdetails' post.id %}">
+        <img src="{{ post.content.url }}" alt="Placeholder image">
+      </a>
+      {% elif post.share.content %}
+      <a href="{% url 'postdetails' post.id %}">
+        <img src="{{ post.share.content.url }}" alt="Placeholder image">
+      </a>
+      {% endif %}
+    </figure>
+
+    </div>
+      </div>
+
+</div>
+    {% empty %}
+      <br>
+      {% if user.is_authenticated and user == profile.user %}
+      <h3 class="title is-3">You do not have any post!</h3>
+      {% else %}
+      <h3 class="title is-3">No Available Post</h3>
+      {% endif %}
+    {% endfor %}
+
+
+</div>
+</div>
+
+
+
+    </div>
+  </section>
+
+
+{% endblock %}

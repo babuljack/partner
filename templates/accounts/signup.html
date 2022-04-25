@@ -1,0 +1,101 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register</title>
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+
+  </head>
+  <body>
+
+
+ <!------ Include the above in your HEAD tag ---------->
+ 
+ <div class="container">
+             <form class="form-horizontal" role="form" novalidate method="POST">
+                 {% csrf_token %}
+                 <h2>Registration Form</h2>
+                 <div class="form-group">
+                    <label for="firstName" class="col-sm-4 control-label">First Name*</label>
+                    <div class="col-sm-8">
+                        {{form.first_name}}
+                        <span class="text-danger">{{form.first_name.errors|striptags}}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="lastName" class="col-sm-4 control-label">Last Name</label>
+                    <div class="col-sm-8">
+                        {{form.last_name}}
+                    </div>
+                </div>
+                 <div class="form-group">
+                     <label for="userName" class="col-sm-4 control-label">Username*</label>
+                     <div class="col-sm-8">
+                        {{form.username}} 
+                        <span class="text-danger">{{form.username.errors|striptags}}</span>
+                        <span class="help-block">Use unique name: such as jack99</span>
+                     </div>
+                 </div>
+                 <div class="form-group">
+                     <label for="email" class="col-sm-4 control-label">Email*</label>
+                     <div class="col-sm-8">
+                        {{form.email}} 
+                        <span class="text-danger">{{form.email.errors|striptags}}</span>    
+                    </div>
+                 </div>
+              
+                 <div class="form-group">
+                     <label for="birthDate" class="col-sm-4 control-label">Date of Birth</label>
+                     <div class="col-sm-8">
+                        {{form.db}}
+                     </div>
+                 </div>
+        
+                 <div class="form-group">
+                     <label class="control-label col-sm-4">Gender</label>
+                     <div class="col-sm-6">
+                         <div class="row">
+                            {% for g in form.gender  %}
+                             <div class="col-sm-4" style="color:rgb(70, 63, 63)">      
+                                 <label class="radio-inline">
+                                    {{g}}
+                                 </label>
+                             </div>
+                             {% endfor %}
+                         </div>
+                     </div>
+                 </div> <!-- /.form-group -->
+             
+                 <div class="form-group">
+                    <label for="password" class="col-sm-4 control-label">New Password*</label>
+                    <div class="col-sm-8">
+                        {{form.password1}}    
+                        <span class="text-danger">{{form.password1.errors|striptags}}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-sm-4 control-label">Confirm Password*</label>
+                    <div class="col-sm-8">
+                        {{form.password2}} 
+                        <span class="text-danger">{{form.password2.errors|striptags}}</span>   
+                    </div>
+                </div> 
+                <div class="form-group">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                    </div>
+                </div>
+             </form> <!-- /form -->
+             <p style="text-align:center;font-size:20px">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+         </div> <!-- ./container -->
+
+
+  </div>
+
