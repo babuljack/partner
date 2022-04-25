@@ -11,6 +11,6 @@ urlpatterns = [
     path('user/',include('Account.urls')),
     path('',include('Main.urls')),
     path('msg',include('message.urls')),
-   # path('ws',include('message.urls')),
+
 ]
 
