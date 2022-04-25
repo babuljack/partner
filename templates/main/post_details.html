@@ -32,8 +32,8 @@
                 <i  class="material-icons">photo_filter</i>
                 New Story
               </a></li>
-              <li><a href=""><i  class="material-icons">group_add</i>Followings</a></li>
-              <li><a href=""><i  class="material-icons">group</i>Followers</a></li>
+              <li><a href="{% url 'index' %}?following=view"><i  class="material-icons">group_add</i>Followings</a></li>
+              <li><a href="{% url 'index' %}?follower=view"><i  class="material-icons">group</i>Followers</a></li>
               <li><a href="{% url 'profilefavourite' request.user %}"> <i  style="color:red !important" class="material-icons">favorite</i> Saved Post</a></li>
             </ul>
        
