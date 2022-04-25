@@ -72,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-#WSGI_APPLICATION = 'Social.wsgi.application'
+WSGI_APPLICATION = 'Social.wsgi.application'
 ASGI_APPLICATION = "Social.asgi.application"
 CHANNEL_LAYERS = {
     "default": {
