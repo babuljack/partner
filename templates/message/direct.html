@@ -184,7 +184,7 @@ messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
 const chat_name=JSON.parse(document.getElementById('chat-name').textContent);
 const submit=document.getElementById('submit');
 const ws= new WebSocket(
-            'wss://'
+            'ws://'
             + window.location.host
             + '/chat/'
             + chat_name
