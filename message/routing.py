@@ -1,5 +1,5 @@
-from django.urls import re_path
+from django.urls import path
 from .consumer import ChatConsumer
 ws_urls=[
-re_path(r'chat/(?P<chat_name>\w+)/$',ChatConsumer.as_asgi()),
+ path('chat/<chat_name>',ChatConsumer.as_asgi()),
 ]
