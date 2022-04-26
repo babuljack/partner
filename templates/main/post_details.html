@@ -1,6 +1,9 @@
 {% extends 'accounts/base.html' %}
 {% load humanize %}
 {% load static %}
+{% block title %}
+<title>{{post.caption}}</title>
+{% endblock %}
 {% block assets %}
    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
    <script src="{% static 'js/bootstrap.min.js' %}"></script>

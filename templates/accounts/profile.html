@@ -1,13 +1,16 @@
 {% extends 'accounts/base.html' %}
 {% load humanize %}
 {% load static %}
+
+{% block title %}
+<title>{{profile.user.first_name}}'s Profile</title>
+{% endblock %}
 {% block assets %}
    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
    <script src="{% static 'js/bootstrap.min.js' %}"></script>
   
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
  
-
 
 
 {% endblock %}

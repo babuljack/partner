@@ -6,7 +6,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% block title %}
   <title>Welcome to Social Media</title>
+  {% endblock %}
+  
   {% block assets %}
   {% endblock %}
 
@@ -163,8 +166,8 @@
          <li>
           <a href="{% url 'message' %}" >
             <i class="material-icons">send</i>
-            {% if directs_count %}
-            <span class="badge">{{ directs_count }}</span>
+            {% if count_message %}
+            <span class="badge">{{ count_message }}</span>
             {% endif %}
           </a>
         </li>
@@ -238,8 +241,8 @@
     <a href="{% url 'message' %}" class="navbar-item" >
       <i class="material-icons" style="margin-right: 2px; ">send</i>
       Messages
-      {% if directs_count %}
-      <span class="badge">{{ directs_count }}</span>
+      {% if count_message %}
+      <span class="badge">{{ count_message }}</span>
       {% endif %}
     </a>
 

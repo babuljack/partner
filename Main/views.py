@@ -9,6 +9,7 @@ import re
 from django.contrib import messages
 from Account.models import User
 from django.db.models import Q
+from message.models import Message
 # Create your views here.
 
 
@@ -350,9 +351,15 @@ def favourite(request,id):
 
 def CountNotification(request):
     count_notification=0
+    count_message=0
     if request.user.is_authenticated:
-       count_notification=Notification.objects.filter(user=request.user,is_show=False).count()   
-    return {'count_notification': count_notification}
+       count_notification=Notification.objects.filter(user=request.user,is_show=False).count()
+       count_message=Message.objects.filter(user=request.user,is_read=False).count()
+    context={
+       'count_notification': count_notification,
+       'count_message':count_message,
+    }      
+    return context
 
  
 def Notifications(request,pk=None):
