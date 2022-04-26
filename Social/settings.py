@@ -31,7 +31,7 @@ import os
 # Application definition
 
 INSTALLED_APPS = [
-    'channels',
+    #'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -72,9 +72,9 @@ TEMPLATES = [
     },
 ]
 
-#WSGI_APPLICATION = 'Social.wsgi.application'
-ASGI_APPLICATION = "Social.asgi.application"
-CHANNEL_LAYERS = {
+WSGI_APPLICATION = 'Social.wsgi.application'
+#ASGI_APPLICATION = "Social.asgi.application"
+""" CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
@@ -82,7 +82,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
+ """
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
