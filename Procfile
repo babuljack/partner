@@ -1,1 +1,1 @@
-web: gunicorn Selling.wsgi
+web: gunicorn Social.wsgi
