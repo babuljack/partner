@@ -104,7 +104,8 @@ def Index(request):
         'stories':story, 
         'suggestions':suggestfollow, 
         'followers':follower,
-        'users' :users, 
+        'users' :users,
+        'active':'active', 
     }
     return render(request, 'main/index.html',context)
 
