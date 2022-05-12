@@ -182,31 +182,12 @@
           </div>     
             </div>
 
+			{% if request.user == post.post.user %}
                 <div class="options m-1 p-1">
-                  <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-light border btn-lg px-3 rounded-circle"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal feather-lg"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+                  <button class="btn btn-light border btn-lg px-3 rounded-circle" onclick="alert('We are working on this..');"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal feather-lg"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
                 </div>
+           {% endif %}
 
-
-
-                <!--model start -->
-								<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-								<div class="modal-dialog">
-								  <div class="modal-content">
-								    <div class="modal-header">
-								      <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-								      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-								    </div>
-								    <div class="modal-body">
-								      ...
-								    </div>
-								    <div class="modal-footer">
-								      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-								      <button type="button" class="btn btn-primary">Save changes</button>
-								    </div>
-								  </div>
-								</div>
-								</div>
-                <!--model end -->
       </div>
            
            <!--Top Post end-->
@@ -362,10 +343,14 @@
 						<p class="subtitle is-6 text-danger" style="font-size:14px !important;font-style: italic;">{{ post_item.post.date|naturaltime}}</p>
 					</div>		 
 			     	</div>
-
+                       
+					 
+					 {% if request.user == post_item.post.user %}
+		 
 								<div class="options m-1 p-1">
 									<button onclick="alert('We are working on this!')" class="btn btn-light border btn-lg px-3 rounded-circle"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal feather-lg"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
 								</div>
+					 {% endif %}				
 			</div>
            
            <!--Top Post end-->
@@ -479,11 +464,6 @@
  
 
 </div>
-
-
-
-
-
 
 
 <div class="right">
